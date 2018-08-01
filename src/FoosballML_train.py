@@ -3,7 +3,7 @@
 '''
 **********************************************************
 *
-* FoosballML
+* FoosballML - train
 * version: 20180801a
 *
 * By: Nicola Ferralis <feranick@hotmail.com>
@@ -64,7 +64,7 @@ def main():
     HL2 = 15
     drop2 = 0.5
     l2_2 = 1e-4
-    epochs = 2000
+    epochs = 200
     cv_split = 0.02
 
     #batch_size = A.shape[0]
@@ -190,6 +190,9 @@ def main():
     #print("\n  Validation - Loss: {0:.2f}; accuracy: {1:.2f}%".format(score[0], 100*score[1]))
     print('  =========================================\n')
 
+    # save the model to disk
+    print("[INFO] serializing network...")
+    model.save("model")
 
 #************************************
 ''' Main initialization routine '''
