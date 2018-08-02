@@ -3,8 +3,14 @@
 '''
 **********************************************************
 *
-* FoosballML
+* FoosballML - predict
 * version: 20180801c
+*
+* run: python3 FoosballML-predict.py 0,1,2,3
+*
+* 0,1,2,3 are the order of the players for any given game
+* Results are provided in a 1x4 array, where the 1 is winner, 0, is looser
+* For ex.: [0,1,1,0] for 0,1,2,3 means that player 2,3 win, 1,4 lose
 *
 * By: Nicola Ferralis <feranick@hotmail.com>
 *
@@ -12,32 +18,19 @@
 '''
 #print(__doc__)
 
-#***************************************************
-''' This is needed for installation through pip '''
-#***************************************************
-def DataSubmitter():
-    main()
-#***************************************************
-
-import configparser, logging, sys, math, json, os.path, time, base64
-import keras, pickle
-from keras.models import Sequential, load_model
-from keras.layers import Dense, Dropout, Activation, ActivityRegularization, MaxPooling1D
-from sklearn.preprocessing import MultiLabelBinarizer
-from sklearn.preprocessing import LabelEncoder
-from sklearn.model_selection import train_test_split
-import keras.optimizers as opt
-from keras import regularizers
-from keras.callbacks import TensorBoard
-from keras.utils import plot_model
-from sklearn import preprocessing
-from sklearn.model_selection import train_test_split
-from tensorflow.contrib.learn.python.learn import monitors as monitor_lib
+import sys, math, os.path, time, keras, pickle
 import tensorflow as tf
 import pandas as pd
 import numpy as np
 from pathlib import Path
 from datetime import datetime
+from keras.models import Sequential, load_model
+from keras.layers import Dense, Dropout, Activation
+import keras.optimizers as opt
+from keras import regularizers
+from keras.callbacks import TensorBoard
+from keras.utils import plot_model
+from tensorflow.contrib.learn.python.learn import monitors as monitor_lib
 
 #************************************
 ''' Main '''
