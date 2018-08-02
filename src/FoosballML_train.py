@@ -4,7 +4,7 @@
 **********************************************************
 *
 * FoosballML - train
-* version: 20180801b
+* version: 20180801d
 *
 * By: Nicola Ferralis <feranick@hotmail.com>
 *
@@ -39,7 +39,6 @@ import numpy as np
 from pathlib import Path
 from datetime import datetime
 
-
 #************************************
 ''' Main '''
 #************************************
@@ -51,10 +50,10 @@ def main():
     fullSet = True
     numCols = 10
     
+    # withScore: uses the actual score as training data
+    # if False it uses only win/lose
     withScore = False
     
-    useMLB = False
-
     l_rate = 0.0001
     l_rdecay = 0.0
 
@@ -64,7 +63,7 @@ def main():
     HL2 = 15
     drop2 = 0.5
     l2_2 = 1e-4
-    epochs = 200
+    epochs = 10000
     cv_split = 0.02
 
     #batch_size = A.shape[0]
@@ -102,27 +101,24 @@ def main():
     data = np.array(data)
     labels = np.array(labels)
     print("Labels shape:", np.array(labels).shape)
-
-    #************************************
-    ''' MultiLabelEncoder '''
-    #************************************
-    print("[INFO] class labels:")
-    if useMLB == True:
-        mlb = MultiLabelBinarizer()
-        labels = mlb.fit_transform(labels)
-        for (i, label) in enumerate(mlb.classes_):
-            print("{}. {}".format(i + 1, label))
-        print(mlb.classes_)
     
     classes = np.unique(labels, axis=0)
-    print("Unique labels - classes: ", classes)
-
     numLabels = labels.shape[1]
-    numClasses = classes.shape[1]
     print("numLabels = ", numLabels)
-    print("numClasses = ", numClasses)
-    print(data.shape)
-    print(labels.shape)
+
+    mlr = MultiClassReductor()
+    mlr.fit(classes)
+    Cl1 = mlr.transform(labels)
+    print(Cl1)
+    print("Number unique labels - classes: ", np.unique(Cl1).size)
+
+    labels = keras.utils.to_categorical(Cl1, num_classes=np.unique(Cl1).size)
+    print("labels: ",labels.shape)
+    numClasses = np.unique(Cl1).size
+        
+    print("[INFO] label binarizer...")
+    with open("model_mlr", 'ab') as f:
+        f.write(pickle.dumps(mlr))
 
     ### Build model
     model = Sequential()
@@ -135,7 +131,7 @@ def main():
         name='dense2'))
     model.add(Dropout(drop2,
         name='drop2'))
-    model.add(Dense(numLabels, activation = 'softmax',
+    model.add(Dense(numClasses, activation = 'softmax',
         name='dense3'))
 
     #optim = opt.SGD(lr=0.0001, decay=1e-6, momentum=0.9, nesterov=True)
@@ -189,12 +185,25 @@ def main():
     #print("\n  Validation - Loss: {0:.2f}; accuracy: {1:.2f}%".format(score[0], 100*score[1]))
     print('  =========================================\n')
 
-    # save the multi-label binarizer to disk
-    if useMLB == True:
-        print("[INFO] serializing label binarizer...")
-        f = open("model_labels", "wb")
-        f.write(pickle.dumps(mlb))
-        f.close()
+#************************************
+''' MultiClassReductor '''
+#************************************
+class MultiClassReductor():
+    def __self__(self):
+        self.name = name
+    
+    def fit(self,tc):
+        self.totalClass = tc.tolist()
+        print("totalClass: ", self.totalClass)
+    
+    def transform(self,y):
+        Cl = np.zeros(y.shape[0])
+        for j in range(len(y)):
+            Cl[j] = self.totalClass.index(np.array(y[j]).tolist())
+        return Cl
+    
+    def inverse_transform(self,a):
+        return self.totalClass[int(a)]
 
 #************************************
 ''' Main initialization routine '''

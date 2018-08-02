@@ -4,7 +4,7 @@
 **********************************************************
 *
 * FoosballML
-* version: 20180801a
+* version: 20180801c
 *
 * By: Nicola Ferralis <feranick@hotmail.com>
 *
@@ -43,10 +43,9 @@ from datetime import datetime
 ''' Main '''
 #************************************
 def main():
-    useMLB = False
-
-    R = np.array([list(sys.argv[1])], dtype = int)
-    print(R)
+    R = np.array([np.fromstring(sys.argv[1], dtype='uint8', sep=',')])
+    print([R])
+    
     model = load_model("keras_MLP_model.hd5")
     predictions = model.predict(R, verbose=0)[0]
     predict_classes = model.predict_classes(R)
@@ -55,27 +54,38 @@ def main():
     predProb = round(100*predictions[pred_class],2)
     rosterPred = np.where(predictions>0.01)[0]
 
-    print("predict_classes: ", predict_classes)
-    print("pred_class: ", pred_class)
-    print("predProb: ", predProb)
-    print("rosterPred: ", rosterPred)
-    print("predictions: ", predictions)
+    #print("predict_classes: ", predict_classes)
+    #print("pred_class: ", pred_class)
+    #print("predProb: ", predProb)
+    #print("rosterPred: ", rosterPred)
+    
+    print("Estimates in match prediction mode")
+    mlr = pickle.loads(open("model_mlr", "rb").read())
+    print("\n",R[0])
+    for i in range(rosterPred.size):
+        print("{0:} {1:.2f}%".format(mlr.inverse_transform(rosterPred[i]), predictions[i]*100))
 
-    if useMLB == True:
-        idxs = np.argsort(predictions)[::-1][:2]
-        #idxs = predictions[::-1][:2]
-        print(idxs)
-        mlb = pickle.loads(open("model_labels", "rb").read())
-        print(mlb.classes_)
-        for (i, j) in enumerate(idxs):
-            # build the label and draw the label on the image
-            label = "{}: {:.2f}%".format(mlb.classes_[j], predictions[j] * 100)
 
-        # show the probabilities for each of the individual labels
-        for (label, p) in zip(mlb.classes_, predictions):
-            print("{}: {:.2f}%".format(label, p * 100))
+#************************************
+''' MultiClassReductor '''
+#************************************
+class MultiClassReductor():
+    def __self__(self):
+        self.name = name
+    
+    def fit(self,tc):
+        self.totalClass = tc.tolist()
+        print("totalClass: ",self.totalClass)
+    
+    def transform(self,y):
+        Cl = np.zeros(y.shape[0])
+        for j in range(len(y)):
+            Cl[j] = self.totalClass.index(np.array(y[j]).tolist())
+        return Cl
+    
+    def inverse_transform(self,a):
+        return self.totalClass[int(a)]
 
-        print(mlb.inverse_transform([1]))
 
 #************************************
 ''' Main initialization routine '''
