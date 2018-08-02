@@ -4,7 +4,7 @@
 **********************************************************
 *
 * FoosballML - train
-* version: 20180801a
+* version: 20180801b
 *
 * By: Nicola Ferralis <feranick@hotmail.com>
 *
@@ -20,7 +20,7 @@ def DataSubmitter():
 #***************************************************
 
 import configparser, logging, sys, math, json, os.path, time, base64
-import keras
+import keras, pickle
 from keras.models import Sequential, load_model
 from keras.layers import Dense, Dropout, Activation, ActivityRegularization, MaxPooling1D
 from sklearn.preprocessing import MultiLabelBinarizer
@@ -124,7 +124,6 @@ def main():
     print(data.shape)
     print(labels.shape)
 
-
     ### Build model
     model = Sequential()
     model.add(Dense(HL1, activation = 'relu', input_dim=np.array(data).shape[1],
@@ -190,9 +189,12 @@ def main():
     #print("\n  Validation - Loss: {0:.2f}; accuracy: {1:.2f}%".format(score[0], 100*score[1]))
     print('  =========================================\n')
 
-    # save the model to disk
-    print("[INFO] serializing network...")
-    model.save("model")
+    # save the multi-label binarizer to disk
+    if useMLB == True:
+        print("[INFO] serializing label binarizer...")
+        f = open("model_labels", "wb")
+        f.write(pickle.dumps(mlb))
+        f.close()
 
 #************************************
 ''' Main initialization routine '''
