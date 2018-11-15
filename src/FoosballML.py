@@ -268,7 +268,7 @@ def predict(teamString):
     R = np.array([np.fromstring(teamString, dtype='uint8', sep=',')])
 
     mcr = pickle.loads(open("keras_mcr.pkl", "rb").read())
-    model = keras.models.load_model("keras_model.hd5")
+    model = keras.models.load_model("keras_MLP_model.hd5")
     predictions = model.predict(R, verbose=0)[0]
     predict_classes = model.predict_classes(R)
     pred_class = np.argmax(predictions)
