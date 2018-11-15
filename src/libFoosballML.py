@@ -2,7 +2,7 @@
 '''
 **********************************************************
 * libDataML - Library for DataML
-* 20181108a
+* 20181115c
 * Uses: Keras, TensorFlow
 * By: Nicola Ferralis <feranick@hotmail.com>
 ***********************************************************
@@ -113,3 +113,6 @@ class MultiClassReductor():
 
     def classes_(self):
         return self.totalClass
+
+    def names(self,names):
+        self.names = names

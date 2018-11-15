@@ -3,7 +3,7 @@
 '''
 **********************************************************
 * FoosballML
-* 20181115b
+* 20181115c
 * Uses: Keras, TensorFlow
 * By: Nicola Ferralis <feranick@hotmail.com>
 ***********************************************************
@@ -156,7 +156,7 @@ def train(learnFile):
 
     #from tensorflow.contrib.learn.python.learn import monitors as monitor_lib
 
-    A, data, labels = readLearnFile(learnFile)
+    A, data, labels, names = readLearnFile(learnFile)
 
     classes = np.unique(labels, axis=0)
     numLabels = labels.shape[1]
@@ -169,6 +169,7 @@ def train(learnFile):
 
     mcr = MultiClassReductor()
     mcr.fit(classes)
+    mcr.names(names)
     Cl1 = mcr.transform(labels)
     numClasses = np.unique(Cl1).size
     
@@ -275,9 +276,12 @@ def predict(teamString):
     predProb = round(100*predictions[pred_class],2)
     rosterPred = np.where(predictions>0.01)[0]
 
+    names = [mcr.names[x] for x in R[0]]
+
     print('\n  ========================================================')
-    print('  \033[1mPredicting score for game: {0:s}\033[0m '.format(teamString))
+    print('  \033[1mPredicting score for game\033[0m ')
     print('  ========================================================')
+    print('  {0:s} | {1:s} | {2:s} | {3:s} '.format(names[0], names[1], names[2], names[3]))
     for i in range(rosterPred.size):
         print("  {0:}:  {1:.2f}%".format(mcr.inverse_transform(rosterPred[i]), predictions[i]*100))
 
@@ -298,6 +302,7 @@ def readLearnFile(learnFile):
         print("\033[1m Learning file not found\033[0m")
         return
 
+    names = list(df)[1:]
     data = []
     labels = []
 
@@ -313,7 +318,7 @@ def readLearnFile(learnFile):
     data = np.array(data)
     labels = np.array(labels)
 
-    return A, data, labels
+    return A, data, labels, names
 
 #************************************
 # Print NN Info
