@@ -316,15 +316,15 @@ def readLearnFile(learnFile):
     try:
         df = pd.read_csv(learnFile)
         if dP.fullSet == True:
-            numCols = len(df.columns)
+            numCols = len(df.columns)+1
         else:
-            numCols = dP.numCols
+            numCols = dP.numCols+1
         A = np.array(df.values[4:,1:numCols],dtype=np.float64)
     except:
         print("\033[1m Learning file not found\033[0m")
         return
 
-    names = list(df)[1:]
+    names = list(df)[1:numCols]
     data = []
     labels = []
 
