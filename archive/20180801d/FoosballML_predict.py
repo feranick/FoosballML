@@ -53,10 +53,10 @@ def main():
     #print("rosterPred: ", rosterPred)
     
     print("Estimates in match prediction mode")
-    mlr = pickle.loads(open("model_mlr", "rb").read())
+    mcr = pickle.loads(open("keras_mcr.pkl", "rb").read())
     print("\n",R[0])
     for i in range(rosterPred.size):
-        print("{0:} {1:.2f}%".format(mlr.inverse_transform(rosterPred[i]), predictions[i]*100))
+        print("{0:} {1:.2f}%".format(mcr.inverse_transform(rosterPred[i]), predictions[i]*100))
 
 
 #************************************

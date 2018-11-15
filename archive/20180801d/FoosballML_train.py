@@ -52,7 +52,7 @@ def main():
     HL2 = 15
     drop2 = 0.5
     l2_2 = 1e-4
-    epochs = 10000
+    epochs = 2000
     cv_split = 0.02
 
     #batch_size = A.shape[0]
@@ -95,9 +95,9 @@ def main():
     numLabels = labels.shape[1]
     print("numLabels = ", numLabels)
 
-    mlr = MultiClassReductor()
-    mlr.fit(classes)
-    Cl1 = mlr.transform(labels)
+    mcr = MultiClassReductor()
+    mcr.fit(classes)
+    Cl1 = mcr.transform(labels)
     print(Cl1)
     print("Number unique labels - classes: ", np.unique(Cl1).size)
 
@@ -106,8 +106,8 @@ def main():
     numClasses = np.unique(Cl1).size
         
     print("[INFO] label binarizer...")
-    with open("model_mlr", 'ab') as f:
-        f.write(pickle.dumps(mlr))
+    with open("keras_mcr.pkl", 'ab') as f:
+        f.write(pickle.dumps(mcr))
 
     ### Build model
     model = Sequential()

@@ -3,7 +3,7 @@
 '''
 **********************************************************
 * FoosballML
-* 20181114a
+* 20181115a
 * Uses: Keras, TensorFlow
 * By: Nicola Ferralis <feranick@hotmail.com>
 ***********************************************************
@@ -40,15 +40,15 @@ class Conf():
             'fullSet' : False,
             'numCols' : 14,
             'withScore': False,
-            'l_rate' : 0.001,
+            'l_rate' : 0.0001,
             'l_rdecay' : 1e-4,
             'HL' : [12,8],
             'drop' : 0,
             'l2' : 1e-4,
             'epochs' : 2000,
             'cv_split' : 0.01,
-            'fullSizeBatch' : True,
-            'batch_size' : 64,
+            'fullSizeBatch' : False,
+            'batch_size' : 8,
             'numLabels' : 4,
             }
     def sysDef(self):
@@ -107,18 +107,18 @@ def main():
 
     for o, a in opts:
         if o in ("-t" , "--train"):
-            #try:
-            train(sys.argv[2])
-            #except:
-            #    usage()
-            #   sys.exit(2)
+            try:
+                train(sys.argv[2])
+            except:
+                usage()
+                sys.exit(2)
 
         if o in ("-p" , "--predict"):
-            #try:
-            predict(sys.argv[2])
-            #except:
-            #    usage()
-            #    sys.exit(2)
+            try:
+                predict(sys.argv[2])
+            except:
+                usage()
+                sys.exit(2)
 
     total_time = time.clock() - start_time
     print("\n Total time: {0:.1f}s or {1:.1f}m or {2:.1f}h".format(total_time,
@@ -150,8 +150,8 @@ def train(learnFile):
     model_directory = "."
     learnFileRoot = os.path.splitext(learnFile)[0]
     
-    model_name = model_directory+"/keras_model.hd5"
-    model_le = model_directory+"/keras_le.pkl"
+    model_name = model_directory+"/keras_MLP_model.hd5"
+    model_mcr = model_directory+"/keras_mcr.pkl"
 
     #from tensorflow.contrib.learn.python.learn import monitors as monitor_lib
 
@@ -160,23 +160,22 @@ def train(learnFile):
     classes = np.unique(labels, axis=0)
     numLabels = labels.shape[1]
 
-    print("  Number of learning labels: {0:d}\n".format(int(dP.numLabels)))
+    print("\n  Number of learning labels: {0:d}".format(int(dP.numLabels)))
     
     #************************************
     # Label Encoding
     #************************************
 
-    le = MultiClassReductor()
-    le.fit(classes)
-    Cl1 = le.transform(labels)
+    mcr = MultiClassReductor()
+    mcr.fit(classes)
+    Cl1 = mcr.transform(labels)
     numClasses = np.unique(Cl1).size
     
     print("  Number unique classes (training): ", np.unique(Cl1).size)
-    print("\n  Label Encoder saved in:", model_le,"\n")
-    with open(model_le, 'ab') as f:
-        f.write(pickle.dumps(le))
+    print("\n  Multi Label Reductor saved in:", model_mcr,"\n")
+    with open(model_mcr, 'ab') as f:
+        f.write(pickle.dumps(mcr))
 
-    #totCl2 = keras.utils.to_categorical(totCl2, num_classes=np.unique(totCl).size)
     labels = keras.utils.to_categorical(Cl1, num_classes=np.unique(Cl1).size)
 
     #************************************
@@ -239,6 +238,7 @@ def train(learnFile):
 
     accuracy = np.asarray(log.history['acc'])
     val_acc = np.asarray(log.history['val_acc'])
+    
     print("  Number unique classes (training): ", np.unique(Cl1).size)
     printParam()
     print('\n  ========================================================')
@@ -266,19 +266,19 @@ def predict(teamString):
     
     R = np.array([np.fromstring(teamString, dtype='uint8', sep=',')])
 
-    le = pickle.loads(open("keras_le.pkl", "rb").read())
+    mcr = pickle.loads(open("keras_mcr.pkl", "rb").read())
     model = keras.models.load_model("keras_model.hd5")
     predictions = model.predict(R, verbose=0)[0]
     predict_classes = model.predict_classes(R)
     pred_class = np.argmax(predictions)
     predProb = round(100*predictions[pred_class],2)
-    rosterPred = np.where(predictions>0.1)[0]
+    rosterPred = np.where(predictions>0.01)[0]
 
     print('\n  ========================================================')
     print('  \033[1mPredicting score for game: {0:s}\033[0m '.format(teamString))
     print('  ========================================================')
     for i in range(rosterPred.size):
-        print("  {0:}:  {1:.2f}%".format(le.inverse_transform(rosterPred[i]), predictions[i]*100))
+        print("  {0:}:  {1:.2f}%".format(mcr.inverse_transform(rosterPred[i]), predictions[i]*100))
 
 #************************************
 # Open Learning Data
@@ -286,16 +286,16 @@ def predict(teamString):
 def readLearnFile(learnFile):
     dP = Conf()
     print("\n  Opening learning file: ",learnFile)
-    #try:
-    df = pd.read_csv(learnFile)
-    if dP.fullSet == True:
-        numCols = len(df.columns)
-    else:
-        numCols = dP.numCols
-    A = np.array(df.values[4:,1:numCols],dtype=np.float64)
-    #except:
-    #    print("\033[1m Learning file not found\033[0m")
-    #    return
+    try:
+        df = pd.read_csv(learnFile)
+        if dP.fullSet == True:
+            numCols = len(df.columns)
+        else:
+            numCols = dP.numCols
+        A = np.array(df.values[4:,1:numCols],dtype=np.float64)
+    except:
+        print("\033[1m Learning file not found\033[0m")
+        return
 
     data = []
     labels = []
