@@ -93,6 +93,7 @@ class Conf():
 # Main
 #************************************
 def main():
+    dP = Conf()
     start_time = time.clock()
     try:
         opts, args = getopt.getopt(sys.argv[1:],
