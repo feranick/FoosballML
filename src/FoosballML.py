@@ -3,7 +3,7 @@
 '''
 **********************************************************
 * FoosballML
-* 20181115c
+* 20181115d
 * Uses: Keras, TensorFlow
 * By: Nicola Ferralis <feranick@hotmail.com>
 ***********************************************************
@@ -97,7 +97,7 @@ def main():
     start_time = time.clock()
     try:
         opts, args = getopt.getopt(sys.argv[1:],
-                                   "tph:", ["train", "predict", "help"])
+                                   "tpnh:", ["train", "predict", "names", "help"])
     except:
         usage()
         sys.exit(2)
@@ -117,6 +117,13 @@ def main():
         if o in ("-p" , "--predict"):
             try:
                 predict(sys.argv[2])
+            except:
+                usage()
+                sys.exit(2)
+        
+        if o in ("-n" , "--names"):
+            try:
+                getNames()
             except:
                 usage()
                 sys.exit(2)
@@ -267,9 +274,11 @@ def predict(teamString):
         import keras   # pure Keras
     
     R = np.array([np.fromstring(teamString, dtype='uint8', sep=',')])
-
-    mcr = pickle.loads(open("keras_mcr.pkl", "rb").read())
-    model = keras.models.load_model("keras_MLP_model.hd5")
+    try:
+        mcr = pickle.loads(open("keras_mcr.pkl", "rb").read())
+        model = keras.models.load_model("keras_MLP_model.hd5")
+    except:
+        print(' Either File not found: keras_MLP_model.hd5 ')
     predictions = model.predict(R, verbose=0)[0]
     predict_classes = model.predict_classes(R)
     pred_class = np.argmax(predictions)
@@ -284,6 +293,19 @@ def predict(teamString):
     print('  {0:s} | {1:s} | {2:s} | {3:s} '.format(names[0], names[1], names[2], names[3]))
     for i in range(rosterPred.size):
         print("  {0:}:  {1:.2f}%".format(mcr.inverse_transform(rosterPred[i]), predictions[i]*100))
+
+#************************************
+# Get players' name
+#************************************
+def getNames():
+    try:
+        mcr = pickle.loads(open("keras_mcr.pkl", "rb").read())
+    except:
+        print(' File: keras_mcr.pkl not found ')
+        return
+
+    for i in range(len(mcr.names)):
+        print(i, mcr.names[i])
 
 #************************************
 # Open Learning Data
@@ -351,6 +373,8 @@ def usage():
     print('  python3 FoosballML.py -t <learningFile>\n')
     print(' Predict:')
     print('  python3 FoosballML.py -p <players numbers separated by comma>\n')
+    print(' Get players numbers/names:')
+    print('  python3 FoosballML.py -n\n')
     print(' Requires python 3.x. Not compatible with python 2.x\n')
 
 #************************************
