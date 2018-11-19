@@ -354,7 +354,7 @@ def readLearnFile(learnFile):
     labels = np.array(labels)
 
     if dP.normalize:
-        print("\n  Normalizing data from 0 to 1. Normalization saved in: keras_norm.pkl')
+        print("\n  Normalizing data from 0 to 1. Normalization saved in: keras_norm.pkl")
         norm = Normalizer(data)
         norm.save("keras_norm.pkl")
         data = norm.transform_matrix(data)
