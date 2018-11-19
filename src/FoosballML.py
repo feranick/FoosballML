@@ -37,18 +37,18 @@ class Conf():
             
     def datamlDef(self):
         self.conf['Parameters'] = {
-            'fullSet' : False,
+            'fullSet' : True,
             'numCols' : 14,
             'withScore': False,
-            'l_rate' : 0.001,
-            'l_rdecay' : 1e-4,
+            'l_rate' : 0.0001,
+            'l_rdecay' : 0.0,
             'HL' : [30,15],
             'drop' : 0.5,
             'l2' : 1e-4,
-            'epochs' : 3000,
+            'epochs' : 20000,
             'cv_split' : 0.02,
             'fullSizeBatch' : False,
-            'batch_size' : 4,
+            'batch_size' : 8,
             'numLabels' : 4,
             'normalize' : False,
             }
