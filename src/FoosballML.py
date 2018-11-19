@@ -3,7 +3,7 @@
 '''
 **********************************************************
 * FoosballML
-* 20181115d
+* 20181119a
 * Uses: Keras, TensorFlow
 * By: Nicola Ferralis <feranick@hotmail.com>
 ***********************************************************
@@ -50,6 +50,7 @@ class Conf():
             'fullSizeBatch' : False,
             'batch_size' : 4,
             'numLabels' : 4,
+            'normalize' : False,
             }
     def sysDef(self):
         self.conf['System'] = {
@@ -75,6 +76,7 @@ class Conf():
             self.fullSizeBatch = self.conf.getboolean('Parameters','fullSizeBatch')
             self.batch_size = self.conf.getint('Parameters','batch_size')
             self.numLabels = self.conf.getint('Parameters','numLabels')
+            self.normalize = self.conf.getboolean('Parameters','normalize')
             self.useTFKeras = self.conf.getboolean('System','useTFKeras')
         except:
             print(" Error in reading configuration file. Please check it\n")
@@ -271,21 +273,32 @@ def predict(teamString):
     if dP.useTFKeras:
         import tensorflow.keras as keras  #tf.keras
     else:
-        import keras   # pure Keras
+        import keras   # pure
     
-    R = np.array([np.fromstring(teamString, dtype='uint8', sep=',')])
     try:
         mcr = pickle.loads(open("keras_mcr.pkl", "rb").read())
         model = keras.models.load_model("keras_MLP_model.hd5")
     except:
         print(' Either File not found: keras_MLP_model.hd5 ')
+
+    R = np.array([np.fromstring(teamString, dtype='uint8', sep=',')])
+    names = [mcr.names[x] for x in R[0]]
+
+    if dP.normalize:
+        try:
+            norm = pickle.loads(open('keras_norm.pkl', "rb").read())
+            print("\n  Opening pkl file with normalization data:",'keras_norm.pkl')
+        except:
+            print("\033[1m pkl file not found \033[0m")
+            return
+
+        R = norm.transform_matrix(R)
+
     predictions = model.predict(R, verbose=0)[0]
     predict_classes = model.predict_classes(R)
     pred_class = np.argmax(predictions)
     predProb = round(100*predictions[pred_class],2)
     rosterPred = np.where(predictions>0.01)[0]
-
-    names = [mcr.names[x] for x in R[0]]
 
     print('\n  ========================================================')
     print('  \033[1mPredicting score for game\033[0m ')
@@ -339,6 +352,12 @@ def readLearnFile(learnFile):
 
     data = np.array(data)
     labels = np.array(labels)
+
+    if dP.normalize:
+        print('\n  Normalizing data from 0 to 1')
+        norm = Normalizer(data)
+        norm.save("keras_norm.pkl")
+        data = norm.transform_matrix(data)
 
     return A, data, labels, names
 
