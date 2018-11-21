@@ -3,7 +3,7 @@
 '''
 **********************************************************
 * FoosballML
-* 20181119a
+* 20181121a
 * Uses: Keras, TensorFlow
 * By: Nicola Ferralis <feranick@hotmail.com>
 ***********************************************************
@@ -12,7 +12,7 @@ print(__doc__)
 
 import numpy as np
 import pandas as pd
-import sys, os.path, getopt, time, configparser, pickle, h5py, csv
+import sys, os, os.path, getopt, time, configparser, pickle, h5py, csv
 from libFoosballML import *
 
 #***************************************************
@@ -55,6 +55,8 @@ class Conf():
     def sysDef(self):
         self.conf['System'] = {
             'useTFKeras' : False,
+            'trainOnGPU' : True,
+            'predictOnGPU' : False,
             }
 
     def readConfig(self,configFile):
@@ -78,6 +80,8 @@ class Conf():
             self.numLabels = self.conf.getint('Parameters','numLabels')
             self.normalize = self.conf.getboolean('Parameters','normalize')
             self.useTFKeras = self.conf.getboolean('System','useTFKeras')
+            self.trainOnGPU = self.conf.getboolean('System','trainOnGPU')
+            self.predictOnGPU = self.conf.getboolean('System','predictOnGPU')
         except:
             print(" Error in reading configuration file. Please check it\n")
 
@@ -140,7 +144,10 @@ def main():
 def train(learnFile):
     import tensorflow as tf
     dP = Conf()
-    
+    if dP.predictOnGPU == False:
+        os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
+        os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
+        
     # Use this to restrict GPU memory allocation in TF
     opts = tf.GPUOptions(per_process_gpu_memory_fraction=1)
     conf = tf.ConfigProto(gpu_options=opts)
@@ -270,6 +277,10 @@ def train(learnFile):
 #************************************
 def predict(teamString):
     dP = Conf()
+    if dP.predictOnGPU == False:
+        os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
+        os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
+    
     if dP.useTFKeras:
         import tensorflow.keras as keras  #tf.keras
     else:
