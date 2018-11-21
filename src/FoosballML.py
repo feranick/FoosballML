@@ -34,6 +34,13 @@ class Conf():
             print(" Configuration file: \""+confFileName+"\" does not exist: Creating one.\n")
             self.createConfig()
         self.readConfig(self.configFile)
+        self.tb_directory = "keras_MLP"
+        self.model_directory = "./"
+    
+        self.model_name = self.model_directory+"keras_MLP_model.hd5"
+        self.model_mcr = self.model_directory+"keras_mcr.pkl"
+        self.model_norm = self.model_directory+"keras_norm.pkl"
+        self.model_png = self.model_directory+"keras_MLP_model.png"
             
     def datamlDef(self):
         self.conf['Parameters'] = {
@@ -147,7 +154,7 @@ def train(learnFile):
     if dP.predictOnGPU == False:
         os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
         os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
-        
+    
     # Use this to restrict GPU memory allocation in TF
     opts = tf.GPUOptions(per_process_gpu_memory_fraction=1)
     conf = tf.ConfigProto(gpu_options=opts)
@@ -163,12 +170,7 @@ def train(learnFile):
         from keras.backend.tensorflow_backend import set_session
         set_session(tf.Session(config=conf))
 
-    tb_directory = "keras_MLP"
-    model_directory = "."
     learnFileRoot = os.path.splitext(learnFile)[0]
-    
-    model_name = model_directory+"/keras_MLP_model.hd5"
-    model_mcr = model_directory+"/keras_mcr.pkl"
 
     #from tensorflow.contrib.learn.python.learn import monitors as monitor_lib
 
@@ -190,8 +192,8 @@ def train(learnFile):
     numClasses = np.unique(Cl1).size
     
     print("  Number unique classes (training): ", np.unique(Cl1).size)
-    print("\n  Multi Label Reductor saved in:", model_mcr,"\n")
-    with open(model_mcr, 'ab') as f:
+    print("\n  Multi Label Reductor saved in:", dP.model_mcr,"\n")
+    with open(dP.model_mcr, 'ab') as f:
         f.write(pickle.dumps(mcr))
 
     labels = keras.utils.to_categorical(Cl1, num_classes=np.unique(Cl1).size)
@@ -227,7 +229,7 @@ def train(learnFile):
         optimizer=optim,
         metrics=['accuracy'])
 
-    tbLog = keras.callbacks.TensorBoard(log_dir=tb_directory, histogram_freq=120,
+    tbLog = keras.callbacks.TensorBoard(log_dir=dP.tb_directory, histogram_freq=120,
             batch_size=dP.batch_size,
             write_graph=True, write_grads=True, write_images=True)
     tbLogs = [tbLog]
@@ -239,8 +241,8 @@ def train(learnFile):
         verbose=2,
         validation_split=dP.cv_split)
 
-    model.save(model_name)
-    keras.utils.plot_model(model, to_file=model_directory+'/keras_MLP_model.png', show_shapes=True)
+    model.save(dP.model_name)
+    keras.utils.plot_model(model, to_file=dP.model_png, show_shapes=True)
 
     print('\n  =============================================')
     print('  \033[1mKeras MLP\033[0m - Model Configuration')
@@ -287,18 +289,18 @@ def predict(teamString):
         import keras   # pure
     
     try:
-        mcr = pickle.loads(open("keras_mcr.pkl", "rb").read())
-        model = keras.models.load_model("keras_MLP_model.hd5")
+        mcr = pickle.loads(open(dP.model_mcr, "rb").read())
+        model = keras.models.load_model(dP.model_name)
     except:
-        print(' Either File not found: keras_MLP_model.hd5 ')
+        print(" Either File not found:",dP.model_name,dP.model_mcr)
 
     R = np.array([np.fromstring(teamString, dtype='uint8', sep=',')])
     names = [mcr.names[x] for x in R[0]]
 
     if dP.normalize:
         try:
-            norm = pickle.loads(open('keras_norm.pkl', "rb").read())
-            print("\n  Opening pkl file with normalization data:",'keras_norm.pkl')
+            norm = pickle.loads(open(dP.model_norm, "rb").read())
+            print("\n  Opening pkl file with normalization data:",dP.model_norm)
         except:
             print("\033[1m pkl file not found \033[0m")
             return
@@ -365,9 +367,9 @@ def readLearnFile(learnFile):
     labels = np.array(labels)
 
     if dP.normalize:
-        print("\n  Normalizing data from 0 to 1. Normalization saved in: keras_norm.pkl")
+        print("\n  Normalizing data from 0 to 1. Normalization saved in:", dP.model_norm)
         norm = Normalizer(data)
-        norm.save("keras_norm.pkl")
+        norm.save(dP.model_norm)
         data = norm.transform_matrix(data)
 
     return A, data, labels, names
