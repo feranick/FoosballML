@@ -3,7 +3,7 @@
 '''
 **********************************************************
 * FoosballML
-* 20181121a
+* 20181122a
 * Uses: Keras, TensorFlow
 * By: Nicola Ferralis <feranick@hotmail.com>
 ***********************************************************
@@ -340,7 +340,7 @@ def readLearnFile(learnFile):
     dP = Conf()
     print("\n  Opening learning file: ",learnFile)
     try:
-        df = pd.read_csv(learnFile)
+        df = pd.read_csv(learnFile, na_values=" ")
         if dP.fullSet == True:
             numCols = len(df.columns)+1
         else:
