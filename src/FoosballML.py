@@ -156,12 +156,11 @@ def train(learnFile):
         os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
         conf = None
     else:
-        print("this")
         # Use this to restrict GPU memory allocation in TF
-        opts = tf.GPUOptions(per_process_gpu_memory_fraction=1)
-        conf = tf.ConfigProto(gpu_options=opts)
+        #opts = tf.GPUOptions(per_process_gpu_memory_fraction=1)
+        #conf = tf.ConfigProto(gpu_options=opts)
         #conf.gpu_options.allow_growth = True
-    
+        conf = None
     if dP.useTFKeras:
         print("Using tf.keras API")
         import tensorflow.keras as keras  #tf.keras
