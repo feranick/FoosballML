@@ -3,7 +3,7 @@
 '''
 **********************************************************
 * FoosballML
-* 20181126a
+* 20181128a
 * Uses: Keras, TensorFlow
 * By: Nicola Ferralis <feranick@hotmail.com>
 ***********************************************************
@@ -313,14 +313,17 @@ def predict(teamString):
     predict_classes = model.predict_classes(R)
     pred_class = np.argmax(predictions)
     predProb = round(100*predictions[pred_class],2)
-    rosterPred = np.where(predictions>0.01)[0]
+    rosterPred = np.where(predictions)[0]
 
     print('\n  ========================================================')
     print('  \033[1mPredicting score for game\033[0m ')
     print('  ========================================================')
     print('  {0:s} | {1:s} | {2:s} | {3:s} '.format(names[0], names[1], names[2], names[3]))
     for i in range(rosterPred.size):
-        print("  {0:}:  {1:.2f}%".format(mcr.inverse_transform(rosterPred[i]), predictions[i]*100))
+        if predictions[i] <1e-3:
+            print("  {0:}:  {1:.1e}% - Seriously, no chance!".format(mcr.inverse_transform(rosterPred[i]), predictions[i]*100))
+        else:
+            print("  {0:}:  {1:.1f}%".format(mcr.inverse_transform(rosterPred[i]), predictions[i]*100))
 
 #************************************
 # Get players' name
