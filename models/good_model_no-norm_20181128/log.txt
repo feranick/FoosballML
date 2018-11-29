@@ -11,26 +11,26 @@
   Keras MLP - Parameters
   ================================================
   Optimizer: Adam 
-  Hidden layers: [30, 15] 
+  Hidden layers: [30, 20, 10] 
   Activation function: relu 
   L2: 0.0001 
-  Dropout: 0.5 
-  Learning rate: 0.0001 
-  Learning decay rate: 0.0
-  Batch size: 8
+  Dropout: 0.3 
+  Learning rate: 0.001 
+  Learning decay rate: 0.0001
+  Batch size: 16
   Number of labels: 4
 
   ========================================================
   Keras MLP - Classifier  - Training Summary
   ========================================================
 
-  Accuracy - Average: 32.16%; Max: 41.31%; Last: 33.98%
-  Loss - Average: 1.5725; Min: 1.4457; Last: 1.5218
+  Accuracy - Average: 34.99%; Max: 45.17%; Last: 37.84%
+  Loss - Average: 1.5214; Min: 1.4095; Last: 1.4842
 
 
   ========================================================
   Keras MLP - Classifier  - Validation Summary
   ========================================================
 
-  Accuracy - Average: 66.54%; Max: 66.67%; Last: 66.67%
-  Loss - Average: 1.2495; Min: 1.1414; Last: 1.1703
+  Accuracy - Average: 66.58%; Max: 66.67%; Last: 66.67%
+  Loss - Average: 1.1781; Min: 1.0837; Last: 1.1073
