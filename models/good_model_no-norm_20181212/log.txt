@@ -1,0 +1,36 @@
+  =============================================
+  Keras MLP - Model Configuration
+  =============================================
+  Training set file: G2eFoosball20181212.csv
+  Data size: (303, 29) 
+
+  Number of learning labels: 4
+  Number unique classes (training):  7
+
+  ================================================
+  Keras MLP - Parameters
+  ================================================
+  Optimizer: Adam 
+  Hidden layers: [23, 17, 12] 
+  Activation function: relu 
+  L2: 0.0001 
+  Dropout: 0.1 
+  Learning rate: 0.001 
+  Learning decay rate: 0.0001
+  Batch size: 8
+  Number of labels: 4
+
+  ========================================================
+  Keras MLP - Classifier  - Training Summary
+  ========================================================
+
+  Accuracy - Average: 42.76%; Max: 51.92%; Last: 43.21%
+  Loss - Average: 1.4129; Min: 1.2802; Last: 1.4039
+
+
+  ========================================================
+  Keras MLP - Classifier  - Validation Summary
+  ========================================================
+
+  Accuracy - Average: 97.37%; Max: 100.00%; Last: 100.00%
+  Loss - Average: 1.0483; Min: 0.8252; Last: 0.8600
