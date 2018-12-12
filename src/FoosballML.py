@@ -3,7 +3,7 @@
 '''
 **********************************************************
 * FoosballML
-* 20181128a
+* 20181212a
 * Uses: Keras, TensorFlow
 * By: Nicola Ferralis <feranick@hotmail.com>
 ***********************************************************
@@ -47,13 +47,13 @@ class Conf():
             'fullSet' : True,
             'numCols' : 14,
             'withScore': False,
-            'l_rate' : 0.0001,
-            'l_rdecay' : 0.0,
-            'HL' : [30,15],
-            'drop' : 0.5,
+            'l_rate' : 0.001,
+            'l_rdecay' : 0.0001,
+            'HL' : [23,17,12],
+            'drop' : 0.1,
             'l2' : 1e-4,
-            'epochs' : 20000,
-            'cv_split' : 0.02,
+            'epochs' : 100,
+            'cv_split' : 0.01,
             'fullSizeBatch' : False,
             'batch_size' : 8,
             'numLabels' : 4,
