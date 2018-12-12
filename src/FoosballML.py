@@ -229,6 +229,8 @@ def train(learnFile):
     model.compile(loss='categorical_crossentropy',
         optimizer=optim,
         metrics=['accuracy'])
+        
+    model.summary()
 
     tbLog = keras.callbacks.TensorBoard(log_dir=dP.tb_directory, histogram_freq=120,
             batch_size=dP.batch_size,
@@ -244,6 +246,8 @@ def train(learnFile):
 
     model.save(dP.model_name)
     keras.utils.plot_model(model, to_file=dP.model_png, show_shapes=True)
+
+    model.summary()
 
     print('\n  =============================================')
     print('  \033[1mKeras MLP\033[0m - Model Configuration')
