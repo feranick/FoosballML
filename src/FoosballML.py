@@ -3,7 +3,7 @@
 '''
 **********************************************************
 * FoosballML
-* 20181212a
+* 20181220a
 * Uses: Keras, TensorFlow
 * By: Nicola Ferralis <feranick@hotmail.com>
 ***********************************************************
@@ -193,6 +193,9 @@ def train(learnFile):
     numClasses = np.unique(Cl1).size
     
     print("  Number unique classes (training): ", np.unique(Cl1).size)
+    if np.unique(Cl1).size != 6:
+        print("\n There are more than 6 classes. Something is wrong with the training set. Aborting...")
+        return
     print("\n  Multi Label Reductor saved in:", dP.model_mcr,"\n")
     with open(dP.model_mcr, 'ab') as f:
         f.write(pickle.dumps(mcr))
