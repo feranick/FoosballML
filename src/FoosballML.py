@@ -3,7 +3,7 @@
 '''
 **********************************************************
 * FoosballML
-* 20181220a
+* 20190103a
 * Uses: Keras, TensorFlow
 * By: Nicola Ferralis <feranick@hotmail.com>
 ***********************************************************
@@ -340,7 +340,7 @@ def getNames():
     except:
         print(' File: keras_mcr.pkl not found ')
         return
-
+    print(mcr.names,"\n")
     for i in range(len(mcr.names)):
         print(i, mcr.names[i])
 
