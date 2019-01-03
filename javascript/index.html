@@ -24,15 +24,15 @@
    <IMG SRC="fb.jpg" ALT="Foosball" width="100">
    <br>
    <a href="https://docs.google.com/spreadsheets/d/1E5H7nD7PC6PK5ama_hkdv2KJKq1sbA2mHaHyJpUzP_g" target="_blank">Submit Score</a>
-   <br><br>
-   <font size="1">Player numbers needs to be in increasing order</font>
-   <br>
+   <hr>
    <form name="FoosballML">
    Player 1: <input name="score1" value="1" size="12" maxlength="12" type="text" id="score" onclick="predict()"> - <label id="player1"></label><br>
    Player 2: <input name="score2" value="2" size="12" maxlength="12" type="text" id="score" onclick="predict()"> - <label id="player2"></label><br>
    Player 3: <input name="score3" value="3" size="12" maxlength="12" type="text" id="score" onclick="predict()"> - <label id="player3"></label><br>
-   Player 4: <input name="score4" value="4" size="12" maxlength="12" type="text" id="score"> - <label id="player4" onclick="predict()"></label><br><br>
-   <input value="Predict chances of victory" onclick="predict()" type="button" id="button"><br><br>
+   Player 4: <input name="score4" value="4" size="12" maxlength="12" type="text" id="score"> - <label id="player4" onclick="predict()"></label>
+   <font size="1"><br>Player numbers needs to be in increasing order (low to high)</font>
+   <br>
+   <input value="Predict chances of victory" onclick="predict()" type="button" id="button"><hr>
 
    <b>Chances of winning for each team:</b><br>
    <label id="team1a"></label>,  <label id="team1b"></label>: <label id="output1"></label>%<br>
@@ -41,7 +41,7 @@
    <label id="team4a"></label>, <label id="team4b"></label>: <label id="output4"></label>%<br>
    <label id="team5a"></label>, <label id="team5b"></label>: <label id="output5"></label>%<br>
    <label id="team6a"></label>, <label id="team6b"></label>: <label id="output6"></label>%<br>
-   <br><b> Player codes: </b><br>
+   <hr><b> Player codes: </b><br>
    <label id="fullListNames"></label>
    </form>
  </body>
