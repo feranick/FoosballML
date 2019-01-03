@@ -1,5 +1,18 @@
 <html>
  <head>
+    <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; minimum-scale=1.0; user-scalable=0;" />
+      
+    <!-- Eliminate url and button bars if added to home screen -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+      
+    <!-- Choose how to handle the phone status bar -->
+    <meta names="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+      
+    <link rel="stylesheet" type="text/css" href="foosball.css" media="screen" />
+      
+    <!-- Choose a 57x57 image for the icon -->
+    <link rel="apple-touch-icon" href="foosball_icon.png" />
+
  <title>FoosballML - Team Winning Predictor</title>
  <!-- Load TensorFlow.js -->
  <!-- Get latest version at https://github.com/tensorflow/tfjs -->
@@ -7,12 +20,15 @@
  </script>
  </head>
  <body>
+   <IMG SRC="g2e.png" ALT="G2e logo" width="100">
+   <IMG SRC="fb.jpg" ALT="Foosball" width="100">
+   <br>    <br>
    <form name="FoosballML">
-   Player 1: <input name="score1" value="1" size="12" maxlength="12" type="text"> - <label id="player1"></label><br>
-   Player 2: <input name="score2" value="2" size="12" maxlength="12" type="text"> - <label id="player2"></label><br>
-   Player 3: <input name="score3" value="3" size="12" maxlength="12" type="text"> - <label id="player3"></label><br>
-   Player 4: <input name="score4" value="4" size="12" maxlength="12" type="text"> - <label id="player4"></label><br><br>
-   <input value="Predict chances of victory" onclick="predict()" type="button"><br><br>
+   Player 1: <input name="score1" value="1" size="12" maxlength="12" type="text" id="score"> - <label id="player1"></label><br>
+   Player 2: <input name="score2" value="2" size="12" maxlength="12" type="text" id="score"> - <label id="player2"></label><br>
+   Player 3: <input name="score3" value="3" size="12" maxlength="12" type="text" id="score"> - <label id="player3"></label><br>
+   Player 4: <input name="score4" value="4" size="12" maxlength="12" type="text" id="score"> - <label id="player4"></label><br><br>
+   <input value="Predict chances of victory" onclick="predict()" type="button" id="button"><br><br>
 
    <b><label id="output0"></label></b><br><br>
 
