@@ -1,7 +1,7 @@
 async function predict(){ 
 
 document.getElementById('output0').innerText = "Running prediction...";
-
+document.getElementById("button").value= "Running prediction...";
 const response = await fetch("./names.txt");
 const names = await response.text();
 console.log(names);
@@ -23,6 +23,7 @@ const prediction = model.predict(xp);
 console.log(xp.print(true));
 console.log(prediction.print(true));
 
+document.getElementById("button").value= "Predict chances of victory";
 document.getElementById('output0').innerText = "";
 document.getElementById('team1a').innerText = allNames[document.FoosballML.score3.value];
 document.getElementById('team1b').innerText = allNames[document.FoosballML.score4.value];
