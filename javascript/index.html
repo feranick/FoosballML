@@ -24,10 +24,10 @@
    <IMG SRC="fb.jpg" ALT="Foosball" width="100">
    <br>    <br>
    <form name="FoosballML">
-   Player 1: <input name="score1" value="1" size="12" maxlength="12" type="text" id="score"> - <label id="player1"></label><br>
-   Player 2: <input name="score2" value="2" size="12" maxlength="12" type="text" id="score"> - <label id="player2"></label><br>
-   Player 3: <input name="score3" value="3" size="12" maxlength="12" type="text" id="score"> - <label id="player3"></label><br>
-   Player 4: <input name="score4" value="4" size="12" maxlength="12" type="text" id="score"> - <label id="player4"></label><br><br>
+   Player 1: <input name="score1" value="1" size="12" maxlength="12" type="text" id="score" onclick="predict()"> - <label id="player1"></label><br>
+   Player 2: <input name="score2" value="2" size="12" maxlength="12" type="text" id="score" onclick="predict()"> - <label id="player2"></label><br>
+   Player 3: <input name="score3" value="3" size="12" maxlength="12" type="text" id="score" onclick="predict()"> - <label id="player3"></label><br>
+   Player 4: <input name="score4" value="4" size="12" maxlength="12" type="text" id="score"> - <label id="player4" onclick="predict()"></label><br><br>
    <input value="Predict chances of victory" onclick="predict()" type="button" id="button"><br><br>
 
    <b><label id="output0"></label></b><br><br>
