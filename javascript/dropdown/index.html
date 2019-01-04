@@ -1,0 +1,49 @@
+<html>
+ <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0" />
+      
+    <!-- Eliminate url and button bars if added to home screen -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+      
+    <!-- Choose how to handle the phone status bar -->
+    <meta names="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+      
+    <link rel="stylesheet" type="text/css" href="foosball.css" media="screen" />
+      
+    <!-- Choose a 57x57 image for the icon -->
+    <link rel="apple-touch-icon" href="foosball_icon.png" />
+
+ <title>FoosballML - Team Winning Predictor</title>
+ <!-- Load TensorFlow.js -->
+ <!-- Get latest version at https://github.com/tensorflow/tfjs -->
+ <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs">   
+ </script>
+ </head>
+ <body>
+   <IMG SRC="g2e.png" ALT="G2e logo" width="100">
+   <IMG SRC="fb.jpg" ALT="Foosball" width="100">
+   <br>
+   <a href="https://docs.google.com/spreadsheets/d/1E5H7nD7PC6PK5ama_hkdv2KJKq1sbA2mHaHyJpUzP_g" target="_blank">Submit Score</a>
+   <hr>
+   <form name="FoosballML">
+   Player 1: <select id="player1" name="player1"></select><br>
+   Player 2: <select id="player2" name="player2"></select><br>
+   Player 3: <select id="player3" name="player3"></select><br>
+   Player 4: <select id="player4" name="player4"></select><br>
+   
+   <font size="1"><br>Player numbers needs to be in increasing order (low to high)</font>
+   <br>
+   <input value="Predict chances of victory" onclick="predict()" type="button" id="button"><hr>
+
+   <b>Chances of winning for each team:</b><br>
+   <label id="team1a"></label>,  <label id="team1b"></label>: <label id="output1"></label>%<br>
+   <label id="team2a"></label>, <label id="team2b"></label>: <label id="output2"></label>%<br>
+   <label id="team3a"></label>, <label id="team3b"></label>: <label id="output3"></label>%<br>
+   <label id="team4a"></label>, <label id="team4b"></label>: <label id="output4"></label>%<br>
+   <label id="team5a"></label>, <label id="team5b"></label>: <label id="output5"></label>%<br>
+   <label id="team6a"></label>, <label id="team6b"></label>: <label id="output6"></label>%<br>
+   <!--<hr><b> Player codes: </b><br><label id="fullListNames"></label>-->
+   </form>
+ </body>
+<script src="./main.js" type="text/javascript"></script>
+<html>
