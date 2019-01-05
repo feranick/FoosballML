@@ -1,56 +1,58 @@
-async function predict(){ 
+async function predict(){
 
-///document.getElementById('output0').innerText = "Running prediction...";
-//document.getElementById("button").value= "Running prediction...";
-const response = await fetch("./names.txt");
-const names = await response.text();
-console.log(names);
+   allNames = await getNames();
+   listNames(allNames);
 
-var allNames = names.replace(/['\[\]]/g,'').split(',');
+   s1 = Number(document.FoosballML.score1.value);
+   s2 = Number(document.FoosballML.score2.value);
+   s3 = Number(document.FoosballML.score3.value);
+   s4 = Number(document.FoosballML.score4.value);
 
-document.getElementById('player1').innerText = allNames[document.FoosballML.score1.value];
-document.getElementById('player2').innerText = allNames[document.FoosballML.score2.value];
-document.getElementById('player3').innerText = allNames[document.FoosballML.score3.value];
-document.getElementById('player4').innerText = allNames[document.FoosballML.score4.value];
+   for(var i = 1; i <= 4; i++) {
+      document.getElementById("player"+i).innerText = allNames[this['s'+i]];
+      }
 
-const model = await tf.loadModel('./model.json');
-const xp = tf.tensor([[Number(document.FoosballML.score1.value),
-	Number(document.FoosballML.score2.value),
-	Number(document.FoosballML.score3.value),
-	Number(document.FoosballML.score4.value)]]);
-const prediction = model.predict(xp);
+   const model = await tf.loadModel('./model.json');
+   const xp = tf.tensor([[s1,s2,s3,s4]]);
 
-console.log(xp.print(true));
-console.log(prediction.print(true));
+   const prediction = model.predict(xp);
 
-//document.getElementById("button").value= "Predict chances of victory";
-//document.getElementById('output0').innerText = "";
-document.getElementById('team1a').innerText = allNames[document.FoosballML.score3.value];
-document.getElementById('team1b').innerText = allNames[document.FoosballML.score4.value];
-document.getElementById('output1').innerText = (prediction.dataSync()[0]*100).toFixed(1);
-document.getElementById('team2a').innerText = allNames[document.FoosballML.score2.value];
-document.getElementById('team2b').innerText = allNames[document.FoosballML.score4.value];
-document.getElementById('output2').innerText = (prediction.dataSync()[1]*100).toFixed(1);
-document.getElementById('team3a').innerText = allNames[document.FoosballML.score2.value];
-document.getElementById('team3b').innerText = allNames[document.FoosballML.score3.value];
-document.getElementById('output3').innerText = (prediction.dataSync()[2]*100).toFixed(1);
-document.getElementById('team4a').innerText = allNames[document.FoosballML.score1.value];
-document.getElementById('team4b').innerText = allNames[document.FoosballML.score4.value];
-document.getElementById('output4').innerText = (prediction.dataSync()[3]*100).toFixed(1);
-document.getElementById('team5a').innerText = allNames[document.FoosballML.score1.value];
-document.getElementById('team5b').innerText = allNames[document.FoosballML.score3.value];
-document.getElementById('output5').innerText = (prediction.dataSync()[4]*100).toFixed(1);
-document.getElementById('team6a').innerText = allNames[document.FoosballML.score1.value];
-document.getElementById('team6b').innerText = allNames[document.FoosballML.score2.value];
-document.getElementById('output6').innerText = (prediction.dataSync()[5]*100).toFixed(1);
+   console.log(xp.print(true));
+   console.log(prediction.print(true));
 
-var fullList = "";
-for (i=0; i<allNames.length; i++) {
-  fullList += i + ": " + allNames[i]+"\n";
-  }
+   document.getElementById('team1a').innerText = allNames[document.FoosballML.score3.value];
+   document.getElementById('team1b').innerText = allNames[document.FoosballML.score4.value];
+   document.getElementById('team2a').innerText = allNames[document.FoosballML.score2.value];
+   document.getElementById('team2b').innerText = allNames[document.FoosballML.score4.value];
+   document.getElementById('team3a').innerText = allNames[document.FoosballML.score2.value];
+   document.getElementById('team3b').innerText = allNames[document.FoosballML.score3.value];
+   document.getElementById('team4a').innerText = allNames[document.FoosballML.score1.value];
+   document.getElementById('team4b').innerText = allNames[document.FoosballML.score4.value];
+   document.getElementById('team5a').innerText = allNames[document.FoosballML.score1.value];
+   document.getElementById('team5b').innerText = allNames[document.FoosballML.score3.value];
+   document.getElementById('team6a').innerText = allNames[document.FoosballML.score1.value];
+   document.getElementById('team6b').innerText = allNames[document.FoosballML.score2.value];
 
-document.getElementById('fullListNames').innerText = fullList;
+   for(var i = 1; i <= 6; i++) {
+      document.getElementById('output'+i).innerText = (prediction.dataSync()[i-1]*100).toFixed(1);
+      }
+
 }
 
+async function getNames() {
+    const response = await fetch("./names.txt");
+    const names = await response.text();
+    var allNames = names.replace(/['\[\]]/g,'').split(',');
+    return allNames;
+    }
+
+function listNames(allNames) {
+    var fullList = "";
+    for (i=0; i<allNames.length; i++) {
+        fullList += i + ": " + allNames[i]+"\n";
+        }
+    console.log(fullList);
+    document.getElementById('fullListNames').innerText = fullList;
+    }
 
 predict();
