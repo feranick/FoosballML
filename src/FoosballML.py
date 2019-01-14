@@ -3,7 +3,7 @@
 '''
 **********************************************************
 * FoosballML
-* 20190103a
+* 20190114a
 * Uses: Keras, TensorFlow
 * By: Nicola Ferralis <feranick@hotmail.com>
 ***********************************************************
@@ -41,6 +41,7 @@ class Conf():
         self.model_mcr = self.model_directory+"keras_mcr.pkl"
         self.model_norm = self.model_directory+"keras_norm.pkl"
         self.model_png = self.model_directory+"keras_MLP_model.png"
+        self.nameFile = self.model_directory+"names.txt"
             
     def datamlDef(self):
         self.conf['Parameters'] = {
@@ -304,6 +305,9 @@ def predict(teamString):
 
     R = np.array([np.fromstring(teamString, dtype='uint8', sep=',')])
     names = [mcr.names[x] for x in R[0]]
+    print("\n  Writing roster of player names in:",dP.nameFile)
+    with open(dP.nameFile, 'w') as f:
+        f.write(str(mcr.names))
 
     if dP.normalize:
         try:
