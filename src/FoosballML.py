@@ -3,7 +3,7 @@
 '''
 **********************************************************
 * FoosballML
-* 20190114a
+* 20190116a
 * Uses: Keras, TensorFlow
 * By: Nicola Ferralis <feranick@hotmail.com>
 ***********************************************************
@@ -45,15 +45,15 @@ class Conf():
             
     def datamlDef(self):
         self.conf['Parameters'] = {
-            'fullSet' : True,
-            'numCols' : 14,
+            'fullSet' : False,
+            'numCols' : 26,
             'withScore': False,
             'l_rate' : 0.001,
             'l_rdecay' : 0.0001,
-            'HL' : [23,17,12],
+            'HL' : [21,16,11],
             'drop' : 0.1,
             'l2' : 1e-4,
-            'epochs' : 100,
+            'epochs' : 2000,
             'cv_split' : 0.01,
             'fullSizeBatch' : False,
             'batch_size' : 8,

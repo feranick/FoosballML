@@ -6,7 +6,7 @@ setup(
     install_requires=['numpy', 'keras', 'h5py', 'tensorflow'],
     entry_points={'console_scripts' : ['FoosballML=FoosballML:FoosballML']},
     py_modules=['FoosballML','libFoosballML'],
-    version='20190114a',
+    version='20190116a',
     description='Winning predictor for 4-member foosball game',
     long_description= """ Winning predictor for 4-member foosball game """,
     author='Nicola Ferralis',
