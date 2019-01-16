@@ -326,14 +326,14 @@ def predict(teamString):
     rosterPred = np.where(predictions)[0]
 
     print('\n  ========================================================')
-    print('  \033[1mPredicting score for game\033[0m ')
+    print('  \033[1mPredicting score for game: Absolute (Relative)\033[0m ')
     print('  ========================================================')
     print('  {0:s} | {1:s} | {2:s} | {3:s} '.format(names[0], names[1], names[2], names[3]))
     for i in range(rosterPred.size):
         if predictions[i] <1e-3:
             print("  {0:}:  {1:.1e}% - Seriously, no chance!".format(mcr.inverse_transform(rosterPred[i]), predictions[i]*100))
         else:
-            print("  {0:}:  {1:.1f}%".format(mcr.inverse_transform(rosterPred[i]), predictions[i]*100))
+            print("  {0:}:  {1:.1f}% ({2:.1f}%)".format(mcr.inverse_transform(rosterPred[i]), predictions[i]*100, predictions[i]*100/(predictions[i]+predictions[5-i])))
 
 #************************************
 # Get players' name
