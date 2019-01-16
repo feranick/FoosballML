@@ -29,7 +29,8 @@ async function predict(){
 
     for(var i = 1; i <= 6; i++) {
        document.getElementById('output'+i).innerText = (prediction.dataSync()[i-1]*100).toFixed(1);
-       }
+       document.getElementById('outputR'+i).innerText = (prediction.dataSync()[i-1]*100/(prediction.dataSync()[i-1]+prediction.dataSync()[6-i])).toFixed(1); 
+      }
     }
 
 async function setupMenus() {
