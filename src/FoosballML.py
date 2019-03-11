@@ -3,7 +3,7 @@
 '''
 **********************************************************
 * FoosballML
-* 20190116a
+* 20190311a
 * Uses: Keras, TensorFlow
 * By: Nicola Ferralis <feranick@hotmail.com>
 ***********************************************************
@@ -108,7 +108,7 @@ class Conf():
 #************************************
 def main():
     dP = Conf()
-    start_time = time.clock()
+    start_time = time.perf_counter()
     try:
         opts, args = getopt.getopt(sys.argv[1:],
                                    "tpnh:", ["train", "predict", "names", "help"])
@@ -142,7 +142,7 @@ def main():
                 usage()
                 sys.exit(2)
 
-    total_time = time.clock() - start_time
+    total_time = time.perf_counter() - start_time
     print("\n Total time: {0:.1f}s or {1:.1f}m or {2:.1f}h".format(total_time,
                             total_time/60, total_time/3600),"\n")
 
