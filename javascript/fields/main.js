@@ -12,7 +12,7 @@ async function predict(){
       document.getElementById("player"+i).innerText = allNames[this['s'+i]];
       }
 
-   const model = await tf.loadModel('./model.json');
+   const model = await tf.loadLayersModel('./model.json');
    const xp = tf.tensor([[s1,s2,s3,s4]]);
 
    const prediction = model.predict(xp);

@@ -6,7 +6,7 @@ async function predict(){
        this["p"+i] = document.getElementById("player"+i).selectedIndex;
        }
 
-    const model = await tf.loadModel('./model.json');
+    const model = await tf.loadLayersModel('./model.json');
 
     const xp = tf.tensor([[p1, p2, p3, p4]]);
     const prediction = model.predict(xp);
