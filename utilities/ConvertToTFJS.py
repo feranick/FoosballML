@@ -3,7 +3,7 @@
 '''
 **********************************************************
 * Convert TF models (TF, Keras) into TF.js
-* 20190625a
+* 20190628a
 * Uses: TensorFlow, Keras
 * By: Nicola Ferralis <feranick@hotmail.com>
 ***********************************************************
@@ -25,12 +25,12 @@ def main():
         return
     else:
         print('\n Converting',sys.argv[1],'to TF.js...\n')
-        convertModelToTFLite(sys.argv[1])
+        convertModelToTFJS(sys.argv[1])
 
 #************************************
 # Convert TF Model to TF.Lite
 #************************************
-def convertModelToTFLite(savedModel):
+def convertModelToTFJS(savedModel):
     # Remove this wnen transitioning to tensorflow 2.0
     tf.compat.v1.disable_eager_execution()
     model = keras.models.load_model(savedModel)
