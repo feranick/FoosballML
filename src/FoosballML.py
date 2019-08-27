@@ -3,7 +3,7 @@
 '''
 **********************************************************
 * FoosballML
-* 20190311a
+* 20190826a
 * Uses: Keras, TensorFlow
 * By: Nicola Ferralis <feranick@hotmail.com>
 ***********************************************************
@@ -13,6 +13,8 @@ print(__doc__)
 import numpy as np
 import pandas as pd
 import sys, os, os.path, getopt, time, configparser, pickle, h5py, csv
+import tensorflow as tf
+from pkg_resources import parse_version
 from libFoosballML import *
 
 #***************************************************
@@ -42,6 +44,10 @@ class Conf():
         self.model_norm = self.model_directory+"keras_norm.pkl"
         self.model_png = self.model_directory+"keras_MLP_model.png"
         self.nameFile = self.model_directory+"names.txt"
+        if parse_version(tf.version.VERSION) < parse_version('2.0.0-alpha0'):
+            self.useTF2 = False
+        else:
+            self.useTF2 = True
             
     def datamlDef(self):
         self.conf['Parameters'] = {
@@ -109,6 +115,9 @@ class Conf():
 def main():
     dP = Conf()
     start_time = time.perf_counter()
+    
+    print(" TensorFlow v.",parse_version(tf.version.VERSION) )
+    
     try:
         opts, args = getopt.getopt(sys.argv[1:],
                                    "tpnh:", ["train", "predict", "names", "help"])
@@ -143,6 +152,7 @@ def main():
                 sys.exit(2)
 
     total_time = time.perf_counter() - start_time
+    print(" TensorFlow v.",parse_version(tf.version.VERSION) )
     print("\n Total time: {0:.1f}s or {1:.1f}m or {2:.1f}h".format(total_time,
                             total_time/60, total_time/3600),"\n")
 
@@ -150,27 +160,47 @@ def main():
 # Training
 #************************************
 def train(learnFile):
-    import tensorflow as tf
     dP = Conf()
     if dP.trainOnGPU == False:
         os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
         os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
         conf = None
     else:
-        # Use this to restrict GPU memory allocation in TF
-        #opts = tf.GPUOptions(per_process_gpu_memory_fraction=1)
-        #conf = tf.ConfigProto(gpu_options=opts)
-        #conf.gpu_options.allow_growth = True
-        conf = None
-    if dP.useTFKeras:
-        print("Using tf.keras API")
-        import tensorflow.keras as keras  #tf.keras
-        tf.Session(config=conf)
-    else:
-        print("Using pure keras API")
-        import keras   # pure keras
-        from keras.backend.tensorflow_backend import set_session
-        set_session(tf.Session(config=conf))
+        if dP.useTF2:
+            print(" Using tf.keras API")
+            import tensorflow.keras as keras  #tf.keras
+            opts = tf.compat.v1.GPUOptions(per_process_gpu_memory_fraction=1)     # Tensorflow 2.0
+            conf = tf.compat.v1.ConfigProto(gpu_options=opts)  # Tensorflow 2.0
+        
+            #gpus = tf.config.experimental.list_physical_devices('GPU')
+            #if gpus:
+            #   for gpu in gpus:
+            #       tf.config.experimental.set_memory_growth(gpu, True)
+            #   if dP.setMaxMem:
+            #       tf.config.experimental.set_virtual_device_configuration(
+            #         gpus[0],
+            #         [tf.config.experimental.VirtualDeviceConfiguration(memory_limit=dP.maxMem)])
+        
+            def_acc = 'accuracy'
+            def_val_acc = 'val_accuracy'
+
+        else:
+            #conf.gpu_options.allow_growth = True
+            opts = tf.compat.v1.GPUOptions(per_process_gpu_memory_fraction=1)
+            conf = tf.compat.v1.ConfigProto(gpu_options=opts)
+    
+            if dP.useTFKeras:
+                print(" Using tf.keras API")
+                import tensorflow.keras as keras  #tf.keras
+                tf.compat.v1.Session(config=conf)
+            else:
+                print(" Using pure keras API")
+                import keras   # pure keras
+                from keras.backend.tensorflow_backend import set_session
+                set_session(tf.compat.v1.Session(config=conf))
+        
+            def_acc = 'acc'
+            def_val_acc = 'val_acc'
 
     learnFileRoot = os.path.splitext(learnFile)[0]
 
@@ -248,7 +278,10 @@ def train(learnFile):
         verbose=2,
         validation_split=dP.cv_split)
 
-    model.save(dP.model_name)
+    if dP.useTF2:
+        model.save(dP.model_name, save_format='h5')
+    else:
+        model.save(dP.model_name)
     keras.utils.plot_model(model, to_file=dP.model_png, show_shapes=True)
 
     model.summary()
@@ -265,8 +298,8 @@ def train(learnFile):
     loss = np.asarray(log.history['loss'])
     val_loss = np.asarray(log.history['val_loss'])
 
-    accuracy = np.asarray(log.history['acc'])
-    val_acc = np.asarray(log.history['val_acc'])
+    accuracy = np.asarray(log.history[def_acc])
+    val_acc = np.asarray(log.history[def_val_acc])
     
     print("  Number unique classes (training): ", np.unique(Cl1).size)
     printParam()
